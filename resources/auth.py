@@ -2,13 +2,14 @@ from flask import Blueprint, jsonify, Response
 from flask_jwt_extended import jwt_required, jwt_refresh_token_required, create_access_token, create_refresh_token, \
     get_jwt_identity, unset_jwt_cookies, set_refresh_cookies, set_access_cookies
 from utils.json import json
+from models.user import User
 
 auth_api = Blueprint("auth", __name__)
 
 
 @auth_api.route("/login", methods=["POST"])
 @json(encode_json=False)
-def login(data: dict):
+def login(data: dict) -> Response:
     """
     User logs in with name and password.
     :param data: The json payload as dict.
@@ -20,8 +21,15 @@ def login(data: dict):
     if not name or not password:
         return {}, 400
 
+    user: User = User.query.filter_by(name=name).first()
+
+    if not user or not user.check(password):
+        return {}, 401
+
     identity: dict = {
-        "name": name
+        "uuid": user.uuid,
+        "name": user.name,
+        "admin": user.admin,
     }
 
     access_token: str = create_access_token(identity, fresh=True)
@@ -41,7 +49,7 @@ def login(data: dict):
 @auth_api.route("/refresh", methods=["PATCH"])
 @json(encode_json=False)
 @jwt_refresh_token_required
-def refresh():
+def refresh() -> Response:
     """
     Regenerate a jwt access token by given refresh token.
     :return: A http response containing the jwt access.
@@ -65,7 +73,7 @@ def refresh():
 @auth_api.route("/logout", methods=["DELETE"])
 @json(encode_json=False)
 @jwt_required
-def logout():
+def logout() -> Response:
     """
     Unset the given jwt cookies.
     :return: A http response deleting the jwt cookies.
