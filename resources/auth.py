@@ -9,7 +9,7 @@ auth_api = Blueprint("auth", __name__)
 
 @auth_api.route("/login", methods=["POST"])
 @json(encode_json=False)
-def login(data: dict) -> Response:
+def login(data: dict):
     """
     User logs in with name and password.
     :param data: The json payload as dict.
@@ -49,7 +49,7 @@ def login(data: dict) -> Response:
 @auth_api.route("/refresh", methods=["PATCH"])
 @json(encode_json=False)
 @jwt_refresh_token_required
-def refresh() -> Response:
+def refresh():
     """
     Regenerate a jwt access token by given refresh token.
     :return: A http response containing the jwt access.
@@ -73,7 +73,7 @@ def refresh() -> Response:
 @auth_api.route("/logout", methods=["DELETE"])
 @json(encode_json=False)
 @jwt_required
-def logout() -> Response:
+def logout():
     """
     Unset the given jwt cookies.
     :return: A http response deleting the jwt cookies.

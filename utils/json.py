@@ -1,8 +1,9 @@
 from functools import wraps
+from typing import Callable
 from flask import request, abort, jsonify
 
 
-def json(*, dict_only: bool = True, encode_json: bool = True) -> ():
+def json(*, dict_only: bool = True, encode_json: bool = True) -> Callable:
     """
     This wrapper checks http requests for valid json.
     If the http request contains no valid json the payload will be set to empty dict.
@@ -13,7 +14,7 @@ def json(*, dict_only: bool = True, encode_json: bool = True) -> ():
     :returns: The json wrapper
     """
 
-    def _json(f: ()) -> ():
+    def _json(f: ()) -> Callable:
         @wraps(f)
         def wrapper(*args, **kwargs) -> any:
             payload: any = request.json or {}

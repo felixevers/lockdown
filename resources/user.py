@@ -1,14 +1,14 @@
 from flask import Blueprint
-from typing import Dict, Optional
 from utils.json import json
 from models.user import User
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 user_api = Blueprint("user", __name__)
 
 
 @user_api.route("/create", methods=["POST"])
 @json()
-def create(data: dict) -> (Dict[str, any], Optional[int]):
+def create(data: dict):
     """
     Creates a user by name and password
     :param data: The json payload as dict.
@@ -19,8 +19,6 @@ def create(data: dict) -> (Dict[str, any], Optional[int]):
 
     if not name or not password:
         return {}, 400
-
-    print(password, User.get_password_security_level(password))
 
     user: User = User.create(name, password)
 
@@ -33,4 +31,30 @@ def create(data: dict) -> (Dict[str, any], Optional[int]):
         "result": True,
         "uuid": user.uuid,
         "name": user.name,
+    }
+
+
+@user_api.route("/get", methods=["GET"])
+@json()
+@jwt_required
+def get(data: dict):
+    identity: any = get_jwt_identity()
+
+    if not isinstance(identity, dict):
+        return 401
+
+    uuid: str = identity.get("uuid")
+
+    if not uuid:
+        return {}, 400
+
+    user: User = User.query(uuid=uuid).first()
+
+    if not user:
+        return {}, 400
+
+    return {
+        "uuid": user.uuid,
+        "name": user.name,
+        "admin": user.admin,
     }
