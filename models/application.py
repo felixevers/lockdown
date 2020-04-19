@@ -7,6 +7,7 @@ class Application(db.Model):
     """
     The application database model containing the basic information (below).
     """
+
     uuid: db.Column = db.Column(db.String(36), primary_key=True, unique=True)
     name: db.Column = db.Column(db.String(255), nullable=False, unique=True)
     token: db.Column = db.Column(db.String(36), nullable=False, unique=True)

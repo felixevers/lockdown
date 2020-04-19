@@ -11,6 +11,7 @@ class Group(db.Model):
     """
     The group database model containing the basic information (below).
     """
+
     uuid: db.Column = db.Column(db.String(36), primary_key=True, unique=True)
     name: db.Column = db.Column(db.String(255), nullable=False, unique=True)
 
@@ -52,8 +53,8 @@ class Group(db.Model):
         Gets all permission granted to this group.
         :return: A list with all granted permission.
         """
-        return [Permission.query.filter_by(uuid=permission).first() for permission in
-                GroupToPermission.query.filter_by(group=self.uuid).all()]
+        return [*map(lambda group_permission: group_permission.permission,
+                     GroupToPermission.query.filter_by(group=self.uuid).all())]
 
     def check_permission(self, permission: Permission) -> bool:
         """

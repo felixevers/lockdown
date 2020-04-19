@@ -2,6 +2,7 @@ from flask import Blueprint
 from utils.json import json
 from models.user import User
 from flask_jwt_extended import jwt_required, get_jwt_identity
+from utils.user import get_user
 
 user_api = Blueprint("user", __name__)
 
@@ -37,11 +38,11 @@ def create(data: dict):
 @user_api.route("/get", methods=["GET"])
 @json()
 @jwt_required
-def get(data: dict):
+def get():
     identity: any = get_jwt_identity()
 
     if not isinstance(identity, dict):
-        return 401
+        return {}, 401
 
     uuid: str = identity.get("uuid")
 
@@ -57,4 +58,23 @@ def get(data: dict):
         "uuid": user.uuid,
         "name": user.name,
         "admin": user.admin,
+    }
+
+
+@user_api.route("/change/password", methods=["PATCH"])
+@json()
+@jwt_required
+def update_password(data: dict):
+    user: User = get_user()
+
+    password: str = data.get("password")
+    new_password: str = data.get("newPassword")
+
+    if not user.check(password):
+        return {}, 401
+
+    user.update(new_password)
+
+    return {
+        "result": True,
     }
