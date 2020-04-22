@@ -8,6 +8,7 @@ def get_mysql_uri() -> str:
     This function generates the mysql database uri based on the environment variables.
     :returns: The mysql database uri
     """
+
     # Getting username and password for authentication.
     username: str = config.get("MYSQL_USERNAME")
     password: str = config.get("MYSQL_PASSWORD")
@@ -32,7 +33,11 @@ def get_mysql_uri() -> str:
     # The mysql database
     database: str = str(config.get("MYSQL_DATABASE"))
 
+    # The charset to be used
+    charset: str = str(config.get("MYSQL_CHARSET"))
+
     # Build the uri for connection.
-    uri: str = "mysql+pymysql://" + username + ":" + password + "@" + hostname + ":" + str(port) + "/" + database
+    uri: str = "mysql+pymysql://" + username + ":" + password + "@" + hostname + ":" + str(
+        port) + "/" + database + "?charset=" + charset
 
     return uri

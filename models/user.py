@@ -25,6 +25,7 @@ class User(db.Model):
         :param password: The password to check
         :return: Nothing
         """
+
         return check_password_hash(self.password, password)
 
     def update(self, password: str) -> None:
@@ -33,6 +34,7 @@ class User(db.Model):
         :param password: The wanted new password.
         :return: Nothing
         """
+
         self.password = generate_password_hash(password)
 
         db.session.commit()
@@ -43,6 +45,7 @@ class User(db.Model):
         :param permission: The permission to check
         :return: Whether the user has this permission
         """
+
         return any(
             group.first().check_permission(permission) for group in GroupToUser.query.filter_by(user=self.uuid).all())
 
@@ -55,6 +58,7 @@ class User(db.Model):
         :param admin: Whether the new user should be an administrator or not
         :return: The new user or nothing if the wanted name is not available
         """
+
         if User.query.filter_by(name=name).count() > 0:
             return None
 
@@ -84,6 +88,7 @@ class User(db.Model):
         :param password: The password to check
         :return: The security level of the given password.
         """
+
         criteria: Dict[str, bool] = {
             "lowercase": False,
             "uppercase": False,
@@ -117,14 +122,24 @@ class User(db.Model):
         return sum(criteria.values())
 
     @staticmethod
+    def generate_password() -> str:
+        """
+        Generates a new password with 16 characters
+        :return: the new password
+        """
+
+        return "".join(choices(ascii_letters, k=16))
+
+    @staticmethod
     def init() -> None:
         """
         Create a user with admin privileges if it not exists.
         :return: Nothing
         """
+
         if User.query.filter_by(admin=True).count() == 0:
             name: str = "admin"
-            password: str = "".join(choices(ascii_letters, k=16))
+            password: str = User.generate_password()
             User.create(name, password, admin=True)
 
             logging.warning(" NO USER WITH ADMIN PRIVILEGES FOUND ".center(100, "#"))

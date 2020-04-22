@@ -21,6 +21,7 @@ class Group(db.Model):
         :param permission: The permission to grant
         :return: The association object or nothing is this group already has the given permission.
         """
+
         if GroupToPermission.query.filter_by(group=self.uuid, permission=permission.uuid).count() > 0:
             return None
 
@@ -37,6 +38,7 @@ class Group(db.Model):
         :param permission: The permission to revoke
         :return: The result whether the permission could be revoked.
         """
+
         group_permission: Optional[GroupToPermission] = GroupToPermission.query. \
             filter_by(group=self.uuid, permission=permission.uuid).first()
 
@@ -53,6 +55,7 @@ class Group(db.Model):
         Gets all permission granted to this group.
         :return: A list with all granted permission.
         """
+
         return [*map(lambda group_permission: group_permission.permission,
                      GroupToPermission.query.filter_by(group=self.uuid).all())]
 
@@ -62,6 +65,7 @@ class Group(db.Model):
         :param permission: The permission to check
         :return: The result whether the given permission is granted to this group or not.
         """
+
         return GroupToPermission.query.filter_by(group=self.uuid, permission=permission.uuid).count() > 1
 
     def add_user(self, user: User) -> Optional[GroupToUser]:
@@ -70,6 +74,7 @@ class Group(db.Model):
         :param user: The user to add
         :return: The association object or nothing is this user is already a member of this group.
         """
+
         if GroupToUser.query.filter_by(group=self.uuid, user=user.uuid).count() > 0:
             return None
 
@@ -86,6 +91,7 @@ class Group(db.Model):
         :param user: A group member
         :return: The result whether the group member could removed or not.
         """
+
         group_user: GroupToUser = Group.query.filter_by(group=self.uuid, user=user.uuid).first()
 
         if not group_user:
@@ -101,6 +107,7 @@ class Group(db.Model):
         Gets all members of this group.
         :return: A member list of this group.
         """
+
         return [User.query.filter_by(uuid=user).all() for user in GroupToUser.query.filter_by(group=self.uuid).all()]
 
     @staticmethod
@@ -110,6 +117,7 @@ class Group(db.Model):
         :param name: The wanted group name
         :return: The new group or nothing if the name already exists.
         """
+
         if Group.query.filter_by(name=name).count() > 0:
             return None
 

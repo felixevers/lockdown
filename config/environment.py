@@ -11,6 +11,7 @@ defaults: Dict[str, any] = {
     "MYSQL_DATABASE": "lockdown",
     "MYSQL_USERNAME": "lockdown",
     "MYSQL_PASSWORD": "lockdown",
+    "MYSQL_CHARSET": "utf8mb4",  # recommended charset
 
     # sqlalchemy
     "SQLALCHEMY_TRACK_MODIFICATIONS": False,

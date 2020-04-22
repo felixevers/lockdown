@@ -15,6 +15,7 @@ def login(data: dict):
     :param data: The json payload as dict.
     :return: A http response containing the jwt access and refresh tokens.
     """
+
     name: str = data.get("name")
     password: str = data.get("password")
 
@@ -35,10 +36,7 @@ def login(data: dict):
     access_token: str = create_access_token(identity, fresh=True)
     refresh_token: str = create_refresh_token(identity)
 
-    response: Response = jsonify({
-        "access": access_token,
-        "refresh": refresh_token,
-    })
+    response: Response = jsonify({})
 
     set_access_cookies(response, access_token)
     set_refresh_cookies(response, refresh_token)
@@ -54,6 +52,7 @@ def refresh():
     Regenerate a jwt access token by given refresh token.
     :return: A http response containing the jwt access.
     """
+
     identity: any = get_jwt_identity()
 
     if not isinstance(identity, dict):
@@ -78,6 +77,7 @@ def logout():
     Unset the given jwt cookies.
     :return: A http response deleting the jwt cookies.
     """
+
     response: Response = jsonify({
         "result": True
     })

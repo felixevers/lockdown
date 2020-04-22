@@ -19,6 +19,7 @@ class Application(db.Model):
         :param name: The wanted application name
         :return: The new application or nothing if the name already mapped to an application.
         """
+
         if Application.query.filter_by(name=name).count() > 0:
             return None
 

@@ -4,6 +4,7 @@ from config.database import get_mysql_uri
 from api import db, jwt_manager
 from resources.auth import auth_api
 from resources.user import user_api
+from resources.group import group_api
 from time import sleep
 from sqlalchemy.exc import OperationalError
 from models.user import User
@@ -14,6 +15,7 @@ def create_app() -> Flask:
     Creates a flask application and initializes the extensions.
     :returns: A flask application
     """
+
     app: Flask = Flask("lockdown")
 
     app.config.update(**config)
@@ -36,6 +38,7 @@ def register_extensions(app: Flask) -> None:
     :param app: A flask application
     :returns: Nothing
     """
+
     db.init_app(app)
     jwt_manager.init_app(app)
 
@@ -46,7 +49,9 @@ def register_blueprints(app: Flask) -> None:
     :param app: A flask application
     :returns: Nothing
     """
+
     app.register_blueprint(auth_api, url_prefix="/auth")
+    app.register_blueprint(group_api, url_prefix="/group")
     app.register_blueprint(user_api, url_prefix="/user")
 
 
@@ -55,6 +60,7 @@ def setup_database() -> None:
     Waits for database connection and creates all tables.
     :return: Nothing
     """
+
     while True:
         try:
             db.create_all()

@@ -21,6 +21,7 @@ class Permission(db.Model):
         :param application: The associated application for the permission
         :return: The new permission or nothing if the permission name already exists.
         """
+
         if Permission.query.filter_by(name=name).count() > 0:
             return None
 
