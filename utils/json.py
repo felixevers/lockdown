@@ -39,7 +39,9 @@ def json(*, pass_user: bool = False, admin_only: bool = False, pass_data: bool =
 
             result: any = f(**kwargs)
 
-            if encode_json:
+            if isinstance(result, int):
+                return jsonify({}), result
+            elif encode_json:
                 return jsonify(result), 200
 
             return result

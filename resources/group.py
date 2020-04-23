@@ -17,12 +17,12 @@ def create(data: dict):
     name: str = data.get("name")
 
     if not name:
-        return {}, 400
+        return 400
 
     group: Group = Group.create(name)
 
     if not group:
-        return {}, 400
+        return 400
 
     return {
         "uuid": group.uuid,

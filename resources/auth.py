@@ -20,12 +20,12 @@ def login(data: dict):
     password: str = data.get("password")
 
     if not name or not password:
-        return {}, 400
+        return 400
 
     user: User = User.query.filter_by(name=name).first()
 
     if not user or not user.check(password):
-        return {}, 401
+        return 401
 
     identity: dict = {
         "uuid": user.uuid,

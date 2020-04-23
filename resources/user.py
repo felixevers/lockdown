@@ -65,7 +65,7 @@ def update_password(data: dict, user: User):
     new_password: str = data.get("newPassword")
 
     if not user.check(password):
-        return {}, 401
+        return 401
 
     user.update(new_password)
 
@@ -87,7 +87,7 @@ def delete(data: dict, user: User):
     password: str = data.get("password")
 
     if not password or not user.check(password):
-        abort(403)
+        return 403
 
     db.session.remove(user)
     db.session.commit()
@@ -126,15 +126,15 @@ def reset(data: dict):
     uuid: str = data.get("uuid")
 
     if not uuid:
-        return {}, 400
+        return 400
 
     user: User = User.query.filter_by(uuid=uuid).first()
 
     if not user:
-        return {}, 404
+        return 404
 
     if user.admin:
-        return {}, 403
+        return 403
 
     password: str = User.generate_password()
 
