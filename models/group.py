@@ -12,8 +12,8 @@ class Group(db.Model):
     The group database model containing the basic information (below).
     """
 
-    uuid: db.Column = db.Column(db.String(36), primary_key=True, unique=True)
-    name: db.Column = db.Column(db.String(255), nullable=False, unique=True)
+    uuid: str = db.Column(db.String(36), primary_key=True, unique=True)
+    name: str = db.Column(db.String(255), nullable=False, unique=True)
 
     def grant_permission(self, permission: Permission) -> Optional["GroupToPermission"]:
         """

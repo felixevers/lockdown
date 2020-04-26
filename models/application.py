@@ -1,6 +1,8 @@
 from api import db
 from uuid import uuid4
 from typing import Optional
+from string import ascii_uppercase
+from random import choices
 
 
 class Application(db.Model):
@@ -8,9 +10,27 @@ class Application(db.Model):
     The application database model containing the basic information (below).
     """
 
-    uuid: db.Column = db.Column(db.String(36), primary_key=True, unique=True)
-    name: db.Column = db.Column(db.String(255), nullable=False, unique=True)
-    token: db.Column = db.Column(db.String(36), nullable=False, unique=True)
+    uuid: str = db.Column(db.String(36), primary_key=True, unique=True)
+    name: str = db.Column(db.String(255), nullable=False, unique=True)
+    token: str = db.Column(db.String(64), nullable=False, unique=True)
+
+    def regenerate_token(self) -> str:
+        """
+        Regenerate the token of this application.
+        :return: The new token
+        """
+        self.token = Application.generate_token()
+        db.session.commit()
+
+        return self.token
+
+    @staticmethod
+    def generate_token() -> str:
+        """
+        Generate a new application token containing 64 characters.
+        :return: The new token
+        """
+        return "".join(choices(ascii_uppercase, k=64))
 
     @staticmethod
     def create(name: str) -> Optional["Application"]:
@@ -24,7 +44,7 @@ class Application(db.Model):
             return None
 
         uuid: str = str(uuid4())
-        token: str = str(uuid4())
+        token: str = Application.generate_token()
 
         application: Application = Application(uuid=uuid, name=name, token=token)
 

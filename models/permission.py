@@ -9,9 +9,9 @@ class Permission(db.Model):
     The permission database model containing the basic information (below).
     """
 
-    uuid: db.Column = db.Column(db.String(36), primary_key=True, unique=True)
-    name: db.Column = db.Column(db.String(255), nullable=False, unique=True)
-    application: db.Column = db.Column(db.String(36), db.ForeignKey("application.uuid"), nullable=False)
+    uuid: str = db.Column(db.String(36), primary_key=True, unique=True)
+    name: str = db.Column(db.String(255), nullable=False, unique=True)
+    application: str = db.Column(db.String(36), db.ForeignKey("application.uuid"), nullable=False)
 
     @staticmethod
     def create(name: str, application: Application) -> Optional["Permission"]:

@@ -20,17 +20,14 @@ def create(data: dict):
     password: str = data.get("password")
 
     if not name or not password:
-        return {}, 400
+        return 400
 
     user: User = User.create(name, password)
 
     if not user:
-        return {
-            "result": False,
-        }
+        return 404
 
     return {
-        "result": True,
         "uuid": user.uuid,
         "name": user.name,
     }
@@ -48,6 +45,29 @@ def get(user: User):
         "uuid": user.uuid,
         "name": user.name,
         "admin": user.admin,
+    }
+
+
+@user_api.route("/change/details", methods=["PATCH"])
+@json(pass_user=True)
+def update_details(data: dict, user: User):
+    """
+    Update the details of this user.
+    :param user: The user mapped to the session.
+    :param data: The json payload as dict.
+    :return: A http response containing the result
+    """
+
+    name: str = data.get("password")
+
+    if not name:
+        return 401
+
+    user.name = name
+    db.session.commit()
+
+    return {
+        "name": user.name,
     }
 
 
@@ -69,9 +89,7 @@ def update_password(data: dict, user: User):
 
     user.update(new_password)
 
-    return {
-        "result": True,
-    }
+    return {}
 
 
 @user_api.route("/delete", methods=["DELETE"])

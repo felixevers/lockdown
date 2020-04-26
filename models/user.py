@@ -14,10 +14,10 @@ class User(db.Model):
     The user database model containing the basic information (below).
     """
 
-    uuid: db.Column = db.Column(db.String(36), primary_key=True, unique=True)
-    name: db.Column = db.Column(db.String(255), nullable=False, unique=True)
-    password: db.Column = db.Column(db.String(255), nullable=False)
-    admin: db.Column = db.Column(db.Boolean, nullable=False, default=False)
+    uuid: str = db.Column(db.String(36), primary_key=True, unique=True)
+    name: str = db.Column(db.String(255), nullable=False, unique=True)
+    password: str = db.Column(db.String(255), nullable=False)
+    admin: bool = db.Column(db.Boolean, nullable=False, default=False)
 
     def check(self, password: str) -> None:
         """

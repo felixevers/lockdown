@@ -20,7 +20,7 @@ def json(*, pass_user: bool = False, admin_only: bool = False, pass_data: bool =
     :returns: The json wrapper
     """
 
-    def _json(f: ()) -> Callable:
+    def _json(f: Callable) -> Callable:
         @wraps(f)
         def wrapper(*args, **kwargs) -> any:
             if pass_user or admin_only:
@@ -40,8 +40,11 @@ def json(*, pass_user: bool = False, admin_only: bool = False, pass_data: bool =
             result: any = f(**kwargs)
 
             if isinstance(result, int):
-                return jsonify({}), result
+                return jsonify({
+                    "result": False,
+                }), result
             elif encode_json:
+                result["result"] = True
                 return jsonify(result), 200
 
             return result
