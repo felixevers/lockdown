@@ -5,6 +5,8 @@ from api import db, jwt_manager
 from resources.auth import auth_api
 from resources.user import user_api
 from resources.group import group_api
+from resources.permission import permission_api
+from resources.application import application_api
 from time import sleep
 from sqlalchemy.exc import OperationalError
 from models.user import User
@@ -53,6 +55,8 @@ def register_blueprints(app: Flask) -> None:
     app.register_blueprint(auth_api, url_prefix="/auth")
     app.register_blueprint(group_api, url_prefix="/group")
     app.register_blueprint(user_api, url_prefix="/user")
+    app.register_blueprint(application_api, url_prefix="/application")
+    app.register_blueprint(permission_api, url_prefix="/permission")
 
 
 def setup_database() -> None:
