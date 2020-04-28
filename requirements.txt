@@ -3,9 +3,10 @@ Flask==1.1.2
 flask-bcrypt==0.7.1
 
 flask-sqlalchemy==2.4.1
-sqlalchemy==1.3.16
 pymysql==0.9.3
+sqlalchemy==1.3.16
 
 gunicorn==20.0.4
 
 flask-jwt-extended[asymmetric_crypto]==3.24.1
+

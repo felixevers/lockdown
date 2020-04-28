@@ -10,28 +10,23 @@ services:
       MYSQL_USERNAME: lockdown
       MYSQL_PASSWORD: lockdown
     ports:
-      - "80:80"
+      - 80:80
     networks:
       - frontend
       - backend
     depends_on:
       - mysql
-
   mysql:
     image: mysql
-    restart: always
-    volumes:
-      - mysql:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: lockdown
       MYSQL_DATABASE: lockdown
       MYSQL_USER: lockdown
       MYSQL_PASSWORD: lockdown
+    ports:
+      - 3306:3306
     networks:
       - backend
-
-volumes:
-  mysql:
 
 networks:
   frontend:
