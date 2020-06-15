@@ -6,7 +6,7 @@ defaults: Dict[str, any] = {
     "FLASK_DEBUG": True,
 
     # mysql
-    "MYSQL_HOSTNAME": "mongodb",
+    "MYSQL_HOSTNAME": "mysql",
     "MYSQL_PORT": 3306,  # default mysql port
     "MYSQL_DATABASE": "lockdown",
     "MYSQL_USERNAME": "lockdown",
